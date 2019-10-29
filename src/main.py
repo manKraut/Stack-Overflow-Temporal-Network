@@ -2,29 +2,66 @@ import t_min_max
 import t_partition
 import graphs
 import v_star_sets
+import e_star_sets
+import shutil
+import os
 
 
-with open("sx-stackoverflow-100k.txt") as my_file:
+current_path = os.getcwd()
+dir_paths = ['Graphs', 'AdjacencyLists', 'DegreeCentralities', 'ClosenessCentralities', 'BetweennessCentralities',
+             'EigenVectorCentralities', 'KatzCentralities', 'VStarSets', 'EStarSets']
+for path in dir_paths:
+    try:
+        shutil.rmtree(os.path.join(current_path, path))
+    except OSError:
+        print('Folder %s not found' % os.path.join(current_path, path))
+    else:
+        print('Deleting existing folders')
+    os.mkdir(os.path.join(current_path, path))
+#
+with open("sx-stackoverflow-20k.txt") as my_file:
     head = []
     for line in my_file:
         head.append(line)
 my_file.close()
-
-# Question 1
-minimum, maximum = t_min_max.MinMax(head).min_max()
-
-# Question 2
-T, N = t_partition.Partition(head, minimum, maximum).partition()
-
-# # Question 3
-graphs.GraphAtts(T, head).adjacency_matrix()
 #
-# Question 4
+# # Question 1
+minimum, maximum = t_min_max.MinMax(head).min_max()
+#
+# # Question 2
+T, N = t_partition.Partition(head, minimum, maximum).partition()
+#
+# # # Question 3
+graphs.GraphAtts(T, head, os.path.join(current_path, dir_paths[0]), os.path.join(current_path, dir_paths[1]))\
+    .adjacency_matrix()
+#
+# # Question 4
 # for i in range(N):
-#     dcntr, ccntr, bcntr, ecntr, kcntr = graphs.GraphToCsv(i).centralities_to_csv()
-#     # graphical representation
-#     graphs.Diagrams(dcntr, ccntr, bcntr, ecntr, kcntr).centralities_diagrams()
+#     dcntr, ccntr, bcntr, ecntr, kcntr = graphs.GraphToCsv(i, os.path.join(current_path, dir_paths[1]))\
+#         .centralities_to_csv()
+#
+#     shutil.move(current_path + "/degree_centrality_graph_" + str(i) + ".csv", dir_paths[2])
+#     shutil.move(current_path + "/closeness_centrality_graph_" + str(i) + ".csv", dir_paths[3])
+#     shutil.move(current_path + "/betweenness_centrality_graph_" + str(i) + ".csv", dir_paths[4])
+#     shutil.move(current_path + "/eigenvector_centrality_graph_" + str(i) + ".csv", dir_paths[5])
+#     shutil.move(current_path + "/katz_centrality_graph_" + str(i) + ".csv", dir_paths[6])
 
-#Question 5
+# graphical representation
+# graphs.Diagrams(dcntr, ccntr, bcntr, ecntr, kcntr).centralities_diagrams()
 
-v_star_sets.VStarSets(N).v_star_set()
+# Question 5
+v_star_sets.VStarSets(N, dir_paths[7]).v_star_set()
+
+v_star_files = []
+for _, _, file in os.walk(os.path.join(current_path, dir_paths[7])):
+    v_star_files = file
+
+counter = 0
+target_path = os.path.join(current_path, dir_paths[8])
+for file in v_star_files:
+    v_star_file = os.path.join(os.path.join(current_path, dir_paths[7]), file)
+    for i in range(2):
+        graph_index = counter + i
+        e_star_sets.EStarSet(head, graph_index, v_star_file, target_path).e_star()
+    counter += 1
+
