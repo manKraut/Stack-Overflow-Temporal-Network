@@ -19,7 +19,7 @@ class EStarSet:
                 nodelist_vstar.append(int(line.strip()))
 
         current_dir = os.getcwd()
-        G = nx.read_adjlist(current_dir + '/AdjacencyLists/Graph_' + str(self.graph_index) + '.adjlist')
+        G = nx.read_adjlist(current_dir + '/AdjacencyLists/Graph_' + str(self.graph_index) + '.adjlist', nodetype=int)
 
         for node in nodelist_vstar:
             valid_node_list = []                # create list to store edges that happened in given Graph
