@@ -1,23 +1,26 @@
 import networkx as nx
 import csv
 import matplotlib.pyplot as plt
+import shutil
+import os
 
 import t_min_max
 
 
 class GraphAtts:
-    def __init__(self, T, head):
+    def __init__(self, T, head, graphs_target_path, adjacency_target_path):
         self.T = T
         self.head = head
         self.t_values = []
+        self.graphs_target_path = graphs_target_path
+        self.adjacency_target_path = adjacency_target_path
 
     def adjacency_matrix(self):
         temp = 0
-        name = 1
+        name = 0
         self.t_values = t_min_max.TValues(self.head).get_relative_t_values()
         for j in self.T.values():
             g = nx.Graph(name='set ' + str(name))
-            # node_dict = {}
             for value in j:
                 for z in self.t_values[temp:]:
                     if value == z:
@@ -26,32 +29,29 @@ class GraphAtts:
                         node_2 = int(self.head[temp].split()[1])
                         node_list.append(node_1)
                         node_list.append(node_2)
-                        # graph_node_list.append(node_1)
-                        # graph_node_list.append(node_2)
-                        # node_dict[str(value)] = node_list
                         g.add_node(node_1)
                         g.add_node(node_2)
                         g.add_edge(node_1, node_2)
                         temp += 1
                         break
             print(nx.info(g))
+
             # write list of nodes that belong to each graph, into txt file for further manipulation
             graph_node_list = list(g.nodes)
             print(graph_node_list)
             with open('Graph_nodes_' + str(name) + '.txt', 'w') as fp:
                 for n in graph_node_list:
                     fp.write(str(n) + "\n")
-            # write grapf into txt file for easy retrieval when it's necessary
-            # nx.write_adjlist(g, "Graph_" + str(name) + ".adjlist")
+
+            # write graph into txt file for easy retrieval when it's necessary
+            nx.write_adjlist(g, "Graph_" + str(name) + ".adjlist")
+
+            shutil.move('Graph_nodes_' + str(name) + '.txt', self.graphs_target_path)
+            shutil.move('Graph_' + str(name) + '.adjlist', self.adjacency_target_path)
             print('End of matrix' + str(name) + '\n')
 
-            # write dictionary, representing connections at each timestamp, into a csv file
-            # with open('nodeDict_' + str(name) + '.csv', 'w') as f:
-            #     for key in node_dict.keys():
-            #         f.write("%s,%s, %s\n" % (key, node_dict[key][0], node_dict[key][1]))
-
             # nx.draw(g)
-            # nx.draw(g, with_labels=True)
+            # nx.draw(g, with_labels=False)
             # plt.savefig("Graph.png", format="PNG")
             # plt.show()
 
@@ -59,40 +59,38 @@ class GraphAtts:
 
 
 class GraphToCsv:
-    def __init__(self, i):
-        self.i = i
+    def __init__(self, name, adjacency_target_path):
+        self.name = name
+        self.adjacency_target_path = adjacency_target_path
 
     def centralities_to_csv(self):
-        name = self.i + 1
-        G = nx.read_adjlist("graph_" + str(name) + ".adjlist")
-        print(type(G))
+        G = nx.read_adjlist(os.path.join(self.adjacency_target_path, "graph_" + str(self.name) + ".adjlist"))
         dcntr = nx.degree_centrality(G)
         ccntr = nx.closeness_centrality(G)
         bcntr = nx.betweenness_centrality(G)
         ecntr = nx.eigenvector_centrality(G, 1000)
         kcntr = nx.katz_centrality(G)
 
-        w = csv.writer(open("degree_centrality_graph" + str(name) + ".csv", "w"))
+        w = csv.writer(open("degree_centrality_graph_" + str(self.name) + ".csv", "w"))
         for key, val in dcntr.items():
             w.writerow([key, val])
 
-        w = csv.writer(open("closeness_centrality_graph" + str(name) + ".csv", "w"))
+        w = csv.writer(open("closeness_centrality_graph_" + str(self.name) + ".csv", "w"))
         for key, val in ccntr.items():
             w.writerow([key, val])
 
-        w = csv.writer(open("betweenness_centrality_graph" + str(name) + ".csv", "w"))
+        w = csv.writer(open("betweenness_centrality_graph_" + str(self.name) + ".csv", "w"))
         for key, val in bcntr.items():
             w.writerow([key, val])
 
-        w = csv.writer(open("eigenvector_centrality_graph" + str(name) + ".csv", "w"))
+        w = csv.writer(open("eigenvector_centrality_graph_" + str(self.name) + ".csv", "w"))
         for key, val in ecntr.items():
             w.writerow([key, val])
 
-        w = csv.writer(open("katz_centrality_graph" + str(name) + ".csv", "w"))
+        w = csv.writer(open("katz_centrality_graph_" + str(self.name) + ".csv", "w"))
         for key, val in kcntr.items():
             w.writerow([key, val])
 
-        name += 1
         return dcntr, ccntr, bcntr, ecntr, kcntr
 
 
