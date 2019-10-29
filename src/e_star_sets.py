@@ -1,27 +1,36 @@
 import networkx as nx
+import os
+import shutil
+import csv
 
 
 class EStarSet:
-    def __init__(self, v_star_file, graph_index, head):
+    def __init__(self, head, graph_index, v_star_file, target_path):
         self.v_star_file = v_star_file
         self.graph_index = graph_index
         self.head = head
+        self.target_path = target_path
 
     def e_star(self):
-        e_star = []
-        nodelist = []
+        e_star = {}
+        nodelist_vstar = []
         with open(self.v_star_file, 'r') as vf:
             for line in vf:
-                nodelist.append(int(line.strip()))
+                nodelist_vstar.append(int(line.strip()))
 
-        G = nx.read_adjlist('Graph_' + self.graph_index + '.adjlist')
+        current_dir = os.getcwd()
+        G = nx.read_adjlist(current_dir + '/AdjacencyLists/Graph_' + str(self.graph_index) + '.adjlist')
 
-        for node in nodelist:
-            edges_list = [node]            # create list to store edges that happened in given Graph
-            temp_list = list(G.adj[node])  # neighbours of node in given nodelist
-            for nd in temp_list:           # check if neighbour of node is in the nodelist
-                if nd in nodelist:
-                    edges_list.append(nd)  # then append it to the edges_list
-            e_star.append(edges_list)
+        for node in nodelist_vstar:
+            valid_node_list = []                # create list to store edges that happened in given Graph
+            Gadj_node_list = G.neighbors(node)  # neighbours of node in given nodelist
+            for nd in Gadj_node_list:           # check if neighbour of node is in the nodelist
+                if nd in nodelist_vstar:
+                    valid_node_list.append(nd)  # then append it to the edges_list
+            e_star.update({node: valid_node_list})
 
-        return e_star
+        w = csv.writer(open('E_Star_G_' + str(self.graph_index) + '.csv', 'w'))
+        for key, values in e_star.items():
+            w.writerow([key, values])
+        shutil.move('E_Star_G' + str(self.graph_index) + '.csv', self.target_path)
+
