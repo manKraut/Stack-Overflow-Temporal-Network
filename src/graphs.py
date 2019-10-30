@@ -122,6 +122,8 @@ class Diagrams:
 
         plt.plot(dcntr_values_key, dcntr_nodes_value)
         plt.savefig('Degree_centrality_' + str(self.graph_index) + '.png', format="PNG")
+        plt.legend(['Degree_centrality_' + str(self.graph_index)])
+        shutil.move('Degree_centrality_' + str(self.graph_index) + '.png', self.current_path + "/DegreeCentralities")
         plt.show()
 
         # sort closeness centrality dictionaries by value
@@ -142,6 +144,9 @@ class Diagrams:
 
         plt.plot(ccntr_values_key, ccntr_nodes_value)
         plt.savefig('Closeness_centrality_' + str(self.graph_index) + '.png', format="PNG")
+        plt.legend(['Closeness_centrality_' + str(self.graph_index)])
+        shutil.move('Closeness_centrality_' + str(self.graph_index) + '.png', self.current_path + "/ClosenessCentralities")
+
         plt.show()
 
         # sort closeness centrality dictionaries by value
@@ -162,6 +167,8 @@ class Diagrams:
 
         plt.plot(bcntr_values_key, bcntr_nodes_value)
         plt.savefig('Betweenes_centrality_' + str(self.graph_index) + '.png', format="PNG")
+        plt.legend(['Betweenes_centrality_' + str(self.graph_index)])
+        shutil.move('Betweenes_centrality_' + str(self.graph_index) + '.png', self.current_path + "/BetweennessCentralities")
         plt.show()
 
         # sort closeness centrality dictionaries by value
@@ -182,6 +189,8 @@ class Diagrams:
 
         plt.plot(ecntr_values_key, ecntr_nodes_value)
         plt.savefig('Eigenvector_centrality_' + str(self.graph_index) + '.png', format="PNG")
+        plt.legend(['Eigenvector_centrality_' + str(self.graph_index)])
+        shutil.move('Eigenvector_centrality_' + str(self.graph_index) + '.png', self.current_path + "/EigenVectorCentralities")
         plt.show()
 
         # sort closeness centrality dictionaries by value
@@ -202,4 +211,6 @@ class Diagrams:
 
         plt.plot(kcntr_values_key, kcntr_nodes_value)
         plt.savefig('Katz_centrality_' + str(self.graph_index) + '.png', format="PNG")
+        plt.legend(['Katz_centrality_' + str(self.graph_index)])
+        shutil.move('Katz_centrality_' + str(self.graph_index) + '.png', self.current_path + "/KatzCentralities")
         plt.show()
