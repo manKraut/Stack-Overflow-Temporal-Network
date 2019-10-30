@@ -1,7 +1,6 @@
 import t_min_max
 import csv
 
-
 class Partition:
     def __init__(self, head, t_min, t_max):
         self.head = head
