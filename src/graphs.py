@@ -20,7 +20,7 @@ class GraphAtts:
         name = 0
         self.t_values = t_min_max.TValues(self.head).get_relative_t_values()
         for j in self.T.values():
-            g = nx.Graph(name='set ' + str(name))
+            g = nx.DiGraph(name='set ' + str(name))
             for value in j:
                 for z in self.t_values[temp:]:
                     if value == z:
@@ -35,10 +35,8 @@ class GraphAtts:
                         temp += 1
                         break
             print(nx.info(g))
-
             # write list of nodes that belong to each graph, into txt file for further manipulation
             graph_node_list = list(g.nodes)
-            print(graph_node_list)
             with open('Graph_nodes_' + str(name) + '.txt', 'w') as fp:
                 for n in graph_node_list:
                     fp.write(str(n) + "\n")
@@ -50,13 +48,13 @@ class GraphAtts:
             shutil.move('Graph_' + str(name) + '.adjlist', self.adjacency_target_path)
             print('End of matrix' + str(name) + '\n')
 
-            # nx.draw(g)
-            # nx.draw(g, with_labels=False)
-            # plt.savefig("Graph.png", format="PNG")
+            nx.draw(g)
+            nx.draw(g, with_labels=False)
+            plt.savefig('Graph' + str(name) + '.png', format="PNG")
+            shutil.move('Graph' + str(name) + '.png', self.graphs_target_path)
             # plt.show()
 
             name += 1
-
 
 class GraphToCsv:
     def __init__(self, name, adjacency_target_path):
@@ -95,13 +93,15 @@ class GraphToCsv:
 
 
 class Diagrams:
-    def __init__(self, dcntr, ccntr, bcntr, ecntr, kcntr):
+    def __init__(self, dcntr, ccntr, bcntr, ecntr, kcntr, graph_index, current_path):
 
         self.dcntr = dcntr
         self.ccntr = ccntr
         self.bcntr = bcntr
         self.ecntr = ecntr
         self.kcntr = kcntr
+        self.graph_index = graph_index
+        self.current_path = current_path
 
     def centralities_diagrams(self):
         # sort degree centrality dictionaries by value
@@ -121,6 +121,7 @@ class Diagrams:
         dcntr_nodes_value.append(counter/len(sorted_dcntr))
 
         plt.plot(dcntr_values_key, dcntr_nodes_value)
+        plt.savefig('Degree_centrality_' + str(self.graph_index) + '.png', format="PNG")
         plt.show()
 
         # sort closeness centrality dictionaries by value
@@ -140,6 +141,7 @@ class Diagrams:
         ccntr_nodes_value.append(counter/len(sorted_ccntr))
 
         plt.plot(ccntr_values_key, ccntr_nodes_value)
+        plt.savefig('Closeness_centrality_' + str(self.graph_index) + '.png', format="PNG")
         plt.show()
 
         # sort closeness centrality dictionaries by value
@@ -159,6 +161,7 @@ class Diagrams:
         bcntr_nodes_value.append(counter / len(sorted_bcntr))
 
         plt.plot(bcntr_values_key, bcntr_nodes_value)
+        plt.savefig('Betweenes_centrality_' + str(self.graph_index) + '.png', format="PNG")
         plt.show()
 
         # sort closeness centrality dictionaries by value
@@ -178,6 +181,7 @@ class Diagrams:
         ecntr_nodes_value.append(counter / len(sorted_ecntr))
 
         plt.plot(ecntr_values_key, ecntr_nodes_value)
+        plt.savefig('Eigenvector_centrality_' + str(self.graph_index) + '.png', format="PNG")
         plt.show()
 
         # sort closeness centrality dictionaries by value
@@ -197,4 +201,5 @@ class Diagrams:
         kcntr_nodes_value.append(counter / len(sorted_kcntr))
 
         plt.plot(kcntr_values_key, kcntr_nodes_value)
+        plt.savefig('Katz_centrality_' + str(self.graph_index) + '.png', format="PNG")
         plt.show()
