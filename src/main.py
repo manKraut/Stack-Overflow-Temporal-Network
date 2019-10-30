@@ -88,5 +88,6 @@ ppa = int(input())
 #     similarities.Similarities((os.path.join(current_path, dir_paths[8]) + '\E_Star_G_' + str(i) + '_' + str(i) +
 #                                '.adjlist'), i).similarities()
 similarities.Similarities((os.path.join(current_path, dir_paths[8]) + '\E_Star_G_0_0.adjlist')
+                          , (os.path.join(current_path, dir_paths[8]) + '\E_Star_G_0_1.adjlist')
                           , pgd
                           , pcn, pjc, pa, ppa).similarities()
