@@ -22,7 +22,7 @@ class Similarities:
         file.close()
         file_next.close()
 
-        #Shortest Path
+        ################## Shortest Path #########################
         shortest_paths = nx.all_pairs_shortest_path_length(G)
         flat_shortest_paths = {}
         for pairValue in shortest_paths:
@@ -41,7 +41,7 @@ class Similarities:
         print("Percentage of success for PDG is " + str((PairsInBothStarSets / itemsShortestsPathCount) * 100))
 
 
-        #Common Neighbors
+        ############ Common Neighbors #########################
         total_neighbors = {}
         for node in G.nodes:
             node_neighbors = G.neighbors(node)
@@ -59,17 +59,59 @@ class Similarities:
             if isEdgeExists:
                 PairsInBothStarSets += 1
 
-        print("Percentage of success for PCN is" + str((PairsInBothStarSets/totalNumberofNeighbors)*100))
+        print("Percentage of success for PCN is " + str((PairsInBothStarSets/totalNumberofNeighbors)*100))
 
-        # Jaccard Coefficient
+        ############# Jaccard Coefficient#########################
         jaccard_coefficient = nx.jaccard_coefficient(G)
+        flat_jaccard_coefficient = {}
+        for pairValue in jaccard_coefficient:
+                flat_shortest_paths.update({pairValue[0] + "," + pairValue[1]: pairValue[2]})
 
-        # Adamic adar index
+        totaljaccard_coefficientCount = int(len(flat_shortest_paths) * (self.pjc * 0.01))
+        k = Counter(flat_shortest_paths)
+        TopPairValuesOfPJC = k.most_common(totaljaccard_coefficientCount)
+        PairsInBothStarSets = 0
+        for pairValue in TopPairValuesOfPJC:
+            isEdgeExists = G_next.has_edge(pairValue[0].split(',')[0], pairValue[0].split(',')[1])
+            if isEdgeExists:
+                PairsInBothStarSets += 1
+
+        print("Percentage of success for PJC is " + str((PairsInBothStarSets / totaljaccard_coefficientCount) * 100))
+
+        ############# Adamic adar index#########################
         adamic_adar = nx.adamic_adar_index(G)
+        flat_adamic_adar = {}
+        for pairValue in adamic_adar:
+            flat_adamic_adar.update({pairValue[0] + "," + pairValue[1]: pairValue[2]})
 
-        # Preferential Attachment
+        total_adamic_adarCount = int(len(flat_adamic_adar) * (self.pa * 0.01))
+        k = Counter(flat_adamic_adar)
+        TopPairValuesOfPA = k.most_common(total_adamic_adarCount)
+        PairsInBothStarSets = 0
+        for pairValue in TopPairValuesOfPA:
+            isEdgeExists = G_next.has_edge(pairValue[0].split(',')[0], pairValue[0].split(',')[1])
+            if isEdgeExists:
+                PairsInBothStarSets += 1
+
+        print("Percentage of success for PA is " + str((PairsInBothStarSets / total_adamic_adarCount) * 100))
+
+
+        ############# Preferential Attachment #########################
         preferential_attachment = nx.preferential_attachment(G)
+        flat_preferential_attachment = {}
+        for pairValue in preferential_attachment:
+            flat_preferential_attachment.update({pairValue[0] + "," + pairValue[1]: pairValue[2]})
 
+        total_preferential_attachmentCount = int(len(flat_preferential_attachment) * (self.ppa * 0.01))
+        k = Counter(flat_preferential_attachment)
+        TopPairValuesOfPPA = k.most_common(total_preferential_attachmentCount)
+        PairsInBothStarSets = 0
+        for pairValue in TopPairValuesOfPPA:
+            isEdgeExists = G_next.has_edge(pairValue[0].split(',')[0], pairValue[0].split(',')[1])
+            if isEdgeExists:
+                PairsInBothStarSets += 1
+
+        print("Percentage of success for PPA is " + str((PairsInBothStarSets / total_preferential_attachmentCount) * 100))
 
 
 
