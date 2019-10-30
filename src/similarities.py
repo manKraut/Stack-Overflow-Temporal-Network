@@ -30,6 +30,7 @@ class Similarities:
                     for el1 in list(common_neighbors):
                         print(el1)
 
+
         totalNumberofNeighbors = int(len(total_neighbors) * (self.pcn * 0.01))
         k = Counter(total_neighbors)
         # Finding N highest values
