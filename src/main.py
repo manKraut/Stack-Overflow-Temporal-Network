@@ -26,6 +26,20 @@ dir_paths = ['Graphs', 'AdjacencyLists', 'DegreeCentralities', 'ClosenessCentral
 #         head.append(line)
 # my_file.close()
 
+#Ask user for parameters
+
+print("Please, enter PGD percentage")
+pgd = int(input())
+print("Please, enter PCN percentage")
+pcn = int(input())
+print("Please, enter PJC percentage")
+pjc = int(input())
+print("Please, enter PA percentage")
+pa = int(input())
+print("Please, enter PPA percentage")
+ppa = int(input())
+
+
 # # Question 1
 # minimum, maximum = t_min_max.MinMax(head).min_max()
 
@@ -73,4 +87,6 @@ dir_paths = ['Graphs', 'AdjacencyLists', 'DegreeCentralities', 'ClosenessCentral
 # for i in range(N-1):
 #     similarities.Similarities((os.path.join(current_path, dir_paths[8]) + '\E_Star_G_' + str(i) + '_' + str(i) +
 #                                '.adjlist'), i).similarities()
-similarities.Similarities((os.path.join(current_path, dir_paths[8]) + '\E_Star_G_0_0.adjlist')).similarities()
+similarities.Similarities((os.path.join(current_path, dir_paths[8]) + '\E_Star_G_0_0.adjlist')
+                          , pgd
+                          , pcn, pjc, pa, ppa).similarities()
